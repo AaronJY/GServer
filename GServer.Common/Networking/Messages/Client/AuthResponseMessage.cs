@@ -1,8 +1,7 @@
 ﻿using System.Text;
 using GServer.Common.Networking.Enums;
-using GServer.Common.Networking.Messages;
 
-namespace GServer.Common;
+namespace GServer.Common.Networking.Messages.Client;
 
 public enum AuthResponseFailure : byte
 {

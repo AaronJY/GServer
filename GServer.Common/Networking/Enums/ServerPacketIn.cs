@@ -1,7 +1,7 @@
-namespace GServer.Common.Networking.Enums
+namespace GServer.Common.Networking.Enums;
+
+public enum ServerPacketIn : byte
 {
-    public enum ServerPacketIn : byte
-    {
-        AUTH = 1
-    }
+    AUTH = 1,
+    LIST_SERVERS = 2
 }

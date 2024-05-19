@@ -10,19 +10,11 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        // var sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
-        var serverEP = new IPEndPoint(IPAddress.Any, SERVER_PORT);
+        IPEndPoint serverEP = new(IPAddress.Any, SERVER_PORT);
 
         UdpClient udpClient = new();
         udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
         udpClient.Connect(serverEP);
-
-
-        // byte[] username = "helloworld123".ToUTF8String();
-        // byte[] password = "password&(*$())".ToUTF8String();
-
-        // byte[] sendBuffer = [(byte)ServerPacketIn.AUTH, (byte)username.Length, .. username, (byte)password.Length, .. password];
 
         Console.WriteLine("Username...");
         string username = Console.ReadLine()!;
@@ -58,8 +50,6 @@ internal class Program
 
                     default:
                         Console.WriteLine($"Received unsupported packet.");
-                        // byte[] response = [(byte)ClientPacketIn.UNKNOWN];
-                        // listener.Send(response);
                         break;
                 }
             }

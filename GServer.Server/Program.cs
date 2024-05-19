@@ -41,10 +41,6 @@ internal class Program
                     case ServerPacketIn.AUTH:
                         var msg = new AuthMessage(stream);
 
-                        Console.WriteLine($"Username = {msg.Username}, Length = {msg.Username.Length}");
-
-                        Console.WriteLine($"Password = {msg.Password}, Length = {msg.Password.Length}");
-
                         AuthResponseMessage resp;
 
                         if (msg.Username == "aaronyarbz" && msg.Password == "password123")
