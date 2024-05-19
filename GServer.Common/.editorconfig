@@ -1,0 +1,16 @@
+[*.cs]
+
+# Default severity for all analyzer diagnostics
+dotnet_analyzer_diagnostic.severity = warning
+
+# IDE0290: Use primary constructor
+csharp_style_prefer_primary_constructors = false
+
+# Default severity for analyzer diagnostics with category 'Naming'
+dotnet_analyzer_diagnostic.category-Naming.severity = none
+
+# IDE0160: Convert to block scoped namespace
+csharp_style_namespace_declarations = file_scoped
+
+# CA1051: Do not declare visible instance fields
+dotnet_diagnostic.CA1051.severity = none
