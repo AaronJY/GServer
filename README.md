@@ -6,7 +6,7 @@ A rudimentary UDP game server mimicking the architecture of Graal Online's GServ
 
 ## Networking
 
-UDP packets are sent between the client and server to enable communication. UDP requests can be though of like 'messages', where each message has an ID that denotes the type of message (e.g. AUTH, LIST_SERVERS), followed by the message's data.
+UDP packets are sent between the client and server to enable communication. UDP requests can be thought of like 'messages', where each message has an ID that denotes the type of message (e.g. AUTH, LIST_SERVERS), followed by the message's data.
 
 The first byte of a message is used to denote its type, but no standard format is shared between messages for the data belonging to each message.
 
