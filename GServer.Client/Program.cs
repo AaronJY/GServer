@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using GServer.Common;
 using GServer.Common.Networking.Enums;
+using GServer.Common.Networking.Messages.Client;
 using GServer.Common.Networking.Messages.Server;
 
 internal class Program
