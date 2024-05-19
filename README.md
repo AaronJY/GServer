@@ -21,3 +21,10 @@ For example: when authenticating, the following format is used:
 `{message_id}{username_len}{username}{password_len}{password}`
 
 All possible client and server message IDs can be found in `Networking/Enums/ClientPacketIn.cs` or `Networking/Enums/ServerPacketIn.cs` respectively.
+
+## Projects
+
+The repo is made up of the following projects:
+* GServer.Server - the server to be connected to
+* GServer.Client - the client that connects to the server
+* GServer.Common - a class library used by both of the above projects. Contains shared code.
