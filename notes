@@ -1,0 +1,5 @@
+potentially move flag type to short from byte
+
+
+single thread accept
+    - spin up multiple threads to deal with actions

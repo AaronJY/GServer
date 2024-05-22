@@ -30,7 +30,7 @@ public class AuthResponseMessage : BaseMessage, IMessage<AuthResponseMessage>
         FailureReason = failureReason;
     }
 
-    public AuthResponseMessage(MessageMemoryStream stream) : base((byte)ClientPacketIn.AUTH_RESPONSE)
+    public AuthResponseMessage(MessageNetworkStream stream) : base((byte)ClientPacketIn.AUTH_RESPONSE)
     {
         IsSuccessful = stream.ReadBoolean();
 
@@ -47,7 +47,7 @@ public class AuthResponseMessage : BaseMessage, IMessage<AuthResponseMessage>
 
     public byte[] Serialize()
     {
-        using MessageMemoryStream stream = new();
+        using MessageNetworkStream stream = new();
 
         stream.WriteByte(PacketId);
         stream.WriteBoolean(IsSuccessful);

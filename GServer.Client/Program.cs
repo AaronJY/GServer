@@ -32,7 +32,7 @@ internal class Program
             {
                 byte[] bytes = udpClient.Receive(ref serverEP);
 
-                MessageMemoryStream stream = new(bytes);
+                MessageNetworkStream stream = new(bytes);
 
                 ClientPacketIn packetIn = (ClientPacketIn)stream.ReadByte();
                 switch (packetIn)

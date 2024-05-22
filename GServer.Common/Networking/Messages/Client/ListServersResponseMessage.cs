@@ -12,7 +12,7 @@ public class ListServersResponseMessage : BaseMessage, IMessage<ListServersRespo
         ServerListings = serverListings;
     }
 
-    public ListServersResponseMessage(MessageMemoryStream stream) : base((byte)ClientPacketIn.LIST_SERVERS_RESPONSE)
+    public ListServersResponseMessage(MessageNetworkStream stream) : base((byte)ClientPacketIn.LIST_SERVERS_RESPONSE)
     {
         throw new NotImplementedException();
     }

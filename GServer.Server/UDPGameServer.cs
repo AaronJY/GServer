@@ -2,8 +2,6 @@ using System.Net;
 using System.Net.Sockets;
 using GServer.Common;
 using GServer.Common.Networking.Enums;
-using GServer.Common.Networking.Messages.Client;
-using GServer.Common.Networking.Messages.Server;
 
 namespace GServer.Server;
 
@@ -43,7 +41,7 @@ public class UDPGameServer : IDisposable
         {
             UdpReceiveResult res = await UdpClient.ReceiveAsync();
             byte[] bytes = res.Buffer;
-            MessageMemoryStream stream = new(bytes);
+            MessageNetworkStream stream = new(bytes);
             await HandleMessageAsync(stream, res.RemoteEndPoint);
         }
         catch (Exception ex)
@@ -52,32 +50,17 @@ public class UDPGameServer : IDisposable
         }
     }
 
-    private async Task HandleMessageAsync(MessageMemoryStream stream, IPEndPoint remoteEndPoint)
+    private async Task HandleMessageAsync(MessageNetworkStream stream, IPEndPoint remoteEndPoint)
     {
-        ServerPacketIn serverPacketIn = (ServerPacketIn)stream.ReadByte();
+        byte serverPacketInByte = (byte)stream.ReadByte();
+        ServerPacketIn serverPacketIn = (ServerPacketIn)serverPacketInByte;
 
-        Console.WriteLine($"Handling message {serverPacketIn} from {remoteEndPoint}...");
+        Console.WriteLine($"Handling UDP message {serverPacketInByte} from {remoteEndPoint}...");
 
         switch (serverPacketIn)
         {
-            case ServerPacketIn.AUTH:
-                AuthMessage msg = new(stream);
-
-                AuthResponseMessage resp = msg.Username == "aaronyarbz" && msg.Password == "password123"
-                    ? new(true, Guid.NewGuid().ToString(), null)
-                    : new(false, null, AuthResponseFailure.IncorrectLoginOrPassword);
-
-                byte[] buffer = resp.Serialize();
-                _ = await UdpClient.SendAsync(buffer, buffer.Length, remoteEndPoint);
-
-                break;
-
-            case ServerPacketIn.LIST_SERVERS:
-                throw new NotImplementedException();
-
             default:
-                Console.WriteLine($"Received unsupported packet.");
-                break;
+                throw new NotImplementedException($"Received unsupported packet {serverPacketInByte}");
         }
     }
 
