@@ -4,6 +4,10 @@ namespace GServer.Common;
 
 public class MessageMemoryStream : MemoryStream
 {
+    public MessageMemoryStream()
+    {
+    }
+
     public MessageMemoryStream(byte[] buffer) : base(buffer)
     {
     }

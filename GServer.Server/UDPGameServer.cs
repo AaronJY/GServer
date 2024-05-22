@@ -41,7 +41,7 @@ public class UDPGameServer : IDisposable
         {
             UdpReceiveResult res = await UdpClient.ReceiveAsync();
             byte[] bytes = res.Buffer;
-            MessageNetworkStream stream = new(bytes);
+            MessageMemoryStream stream = new(bytes);
             await HandleMessageAsync(stream, res.RemoteEndPoint);
         }
         catch (Exception ex)
@@ -50,18 +50,19 @@ public class UDPGameServer : IDisposable
         }
     }
 
-    private async Task HandleMessageAsync(MessageNetworkStream stream, IPEndPoint remoteEndPoint)
+    private async Task HandleMessageAsync(MessageMemoryStream stream, IPEndPoint remoteEndPoint)
     {
         byte serverPacketInByte = (byte)stream.ReadByte();
         ServerPacketIn serverPacketIn = (ServerPacketIn)serverPacketInByte;
 
         Console.WriteLine($"Handling UDP message {serverPacketInByte} from {remoteEndPoint}...");
 
-        switch (serverPacketIn)
+        throw serverPacketIn switch
         {
-            default:
-                throw new NotImplementedException($"Received unsupported packet {serverPacketInByte}");
-        }
+            ServerPacketIn.AUTH => new NotImplementedException(),
+            ServerPacketIn.LIST_SERVERS => new NotImplementedException(),
+            _ => new NotImplementedException($"Received unsupported packet {serverPacketInByte}"),
+        };
     }
 
     public void Dispose()

@@ -1,20 +1,15 @@
 ﻿using System.Net;
 using GServer.Server;
 
-internal class Program
+internal sealed class Program
 {
     private const int LISTEN_PORT = 11000;
 
-
     private static void Main(string[] args)
     {
-        UDPGameServer udpGameServer = new(new IPEndPoint(IPAddress.Any, LISTEN_PORT));
+        TCPGameServer server = new(new IPEndPoint(IPAddress.Any, LISTEN_PORT), new GameServerOptions());
+        CancellationTokenSource cancellationTokenSource = new();
 
-        udpGameServer.Start();
-
-        while (true)
-        {
-            _ = udpGameServer.ProcessAsync();
-        }
+        server.Start(cancellationTokenSource.Token).Wait();
     }
 }

@@ -13,9 +13,9 @@ internal class Program
     {
         IPEndPoint serverEP = new(IPAddress.Any, SERVER_PORT);
 
-        UdpClient udpClient = new();
-        udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-        udpClient.Connect(serverEP);
+        TcpClient tcpClient = new();
+        tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+        tcpClient.Connect(serverEP);
 
         Console.WriteLine("Username...");
         string username = Console.ReadLine()!;
@@ -24,29 +24,33 @@ internal class Program
         string password = Console.ReadLine()!;
 
         AuthMessage authMessage = new(username, password);
-        udpClient.Send(authMessage.Serialize());
+        _ = tcpClient.Client.Send(authMessage.Serialize());
 
         try
         {
             while (true)
             {
-                byte[] bytes = udpClient.Receive(ref serverEP);
+                byte[] bytes = new byte[tcpClient.Client.ReceiveBufferSize];
+                _ = tcpClient.Client.Receive(bytes);
 
-                MessageNetworkStream stream = new(bytes);
+                MessageMemoryStream stream = new(bytes);
 
                 ClientPacketIn packetIn = (ClientPacketIn)stream.ReadByte();
                 switch (packetIn)
                 {
                     case ClientPacketIn.AUTH_RESPONSE:
-                        var authResultMessage = new AuthResponseMessage(stream);
+                        AuthResponseMessage authResultMessage = new(stream);
 
                         Console.WriteLine("Success = " + authResultMessage.IsSuccessful);
-
                         Console.WriteLine("SessionToken = " + authResultMessage.SessionToken ?? "null");
-
-
                         Console.WriteLine("FailureReason = " + authResultMessage.FailureReason ?? "null");
 
+                        break;
+
+                    case ClientPacketIn.LIST_SERVERS_RESPONSE:
+                        break;
+
+                    case ClientPacketIn.UNKNOWN:
                         break;
 
                     default:
@@ -61,7 +65,7 @@ internal class Program
         }
         finally
         {
-            udpClient.Close();
+            tcpClient.Close();
         }
 
 

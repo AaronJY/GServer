@@ -1,9 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using GServer.Common;
-using GServer.Common.Networking.Enums;
-using GServer.Common.Networking.Messages.Client;
-using GServer.Common.Networking.Messages.Server;
+using GServer.Common.Networking.Messages;
 
 namespace GServer.Server;
 
@@ -12,6 +10,7 @@ public class TCPGameServer : IDisposable
     private readonly TcpListener _tcpListener;
     private readonly IPEndPoint _endPoint;
     private readonly GameServerOptions _options;
+    private readonly IMessageHandler _messageHandler;
 
     public TCPGameServer(IPEndPoint endPoint, GameServerOptions options)
     {
@@ -19,32 +18,42 @@ public class TCPGameServer : IDisposable
         _options = options;
 
         _tcpListener = new TcpListener(endPoint);
+        _messageHandler = new TCPMessageHandler();
     }
 
     /// <summary>
     /// Bind the server to the given endpoint.
     /// </summary>
-    public async void Start()
+    public async Task Start(CancellationToken cancellationToken)
     {
         Console.WriteLine("Starting TCPGameServer listener...");
         _tcpListener.Start();
+        _ = cancellationToken.Register(_tcpListener.Stop);
         Console.WriteLine($"TCPGameServer listening on {_endPoint}");
 
-        try
+        while (!cancellationToken.IsCancellationRequested)
         {
-            while (true)
+            try
             {
-                await ProcessAsync(await _tcpListener.AcceptTcpClientAsync());
+                using TcpClient tcpClient = await _tcpListener.AcceptTcpClientAsync(cancellationToken);
+
+                await ProcessAsync(tcpClient);
+
+            }
+            catch (SocketException) when (cancellationToken.IsCancellationRequested)
+            {
+                Console.WriteLine("TcpListener stopped listening because cancellation was requested.");
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                _tcpListener.Stop();
             }
         }
-        catch
-        {
-            throw;
-        }
-        finally
-        {
-            _tcpListener.Stop();
-        }
+
     }
 
     /// <summary>
@@ -57,7 +66,7 @@ public class TCPGameServer : IDisposable
         {
             using NetworkStream stream = tcpClient.GetStream();
 
-            byte[] data = new byte[_options.PacketLength];
+            byte[] data = new byte[tcpClient.ReceiveBufferSize];
             int bytesRead = 0;
             int chunkSize = 1;
 
@@ -70,7 +79,7 @@ public class TCPGameServer : IDisposable
             }
 
             // Use the in-memory buffer to process the message
-            await HandleMessageAsync(stream.Socket, new MessageMemoryStream(data));
+            await _messageHandler.HandleMessageAsync(stream.Socket, new MessageMemoryStream(data));
         }
         catch (Exception ex)
         {
@@ -78,39 +87,8 @@ public class TCPGameServer : IDisposable
         }
     }
 
-    private async Task HandleMessageAsync(Socket clientSocket, MessageMemoryStream messageStream)
-    {
-        ServerPacketIn serverPacketIn = (ServerPacketIn)messageStream.ReadByte();
-
-        Console.WriteLine($"Handling message {serverPacketIn} from {client}...");
-
-        switch (serverPacketIn)
-        {
-            case ServerPacketIn.AUTH:
-                AuthMessage msg = new(messageStream);
-
-                AuthResponseMessage resp = msg.Username == "aaronyarbz" && msg.Password == "password123"
-                    ? new(true, Guid.NewGuid().ToString(), null)
-                    : new(false, null, AuthResponseFailure.IncorrectLoginOrPassword);
-
-                byte[] buffer = resp.Serialize();
-                _ = await TcpClient.Client.SendAsync(buffer, 
-
-                break;
-
-            case ServerPacketIn.LIST_SERVERS:
-                throw new NotImplementedException();
-
-            default:
-                Console.WriteLine($"Received unsupported packet.");
-                break;
-        }
-    }
-
     public void Dispose()
     {
-        TcpClient.Close();
-        TcpClient.Dispose();
         GC.SuppressFinalize(this);
     }
 }

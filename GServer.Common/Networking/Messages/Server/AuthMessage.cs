@@ -14,7 +14,7 @@ public class AuthMessage : BaseMessage, IMessage<AuthMessage>
         Password = password;
     }
 
-    public AuthMessage(MessageNetworkStream stream) : base((byte)ServerPacketIn.AUTH)
+    public AuthMessage(MessageMemoryStream stream) : base((byte)ServerPacketIn.AUTH)
     {
         byte usernameLen = (byte)stream.ReadByte();
         string username = stream.ReadUTF8String(usernameLen);
