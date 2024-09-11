@@ -1,15 +1,23 @@
 ﻿using System.Net;
-using GServer.Server;
 
+namespace GServer.Server;
+
+// ReSharper disable once ClassNeverInstantiated.Global
 internal sealed class Program
 {
-    private const int LISTEN_PORT = 11000;
+    private const int ListenPort = 11000;
 
     private static void Main(string[] args)
     {
-        TCPGameServer server = new(new IPEndPoint(IPAddress.Any, LISTEN_PORT), new GameServerOptions());
+        
         CancellationTokenSource cancellationTokenSource = new();
 
-        server.Start(cancellationTokenSource.Token).Wait();
+        Thread serverWorker = new(delegate()
+        {
+            TcpGameServer server = new(new IPEndPoint(IPAddress.Any, ListenPort), new GameServerOptions());
+            server.Start();
+        });
+
+        serverWorker.Start();
     }
 }

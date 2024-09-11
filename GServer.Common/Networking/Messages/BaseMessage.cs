@@ -4,7 +4,7 @@ public abstract class BaseMessage
 {
     protected readonly byte PacketId;
 
-    public BaseMessage(byte packetId)
+    protected BaseMessage(byte packetId)
     {
         PacketId = packetId;
     }

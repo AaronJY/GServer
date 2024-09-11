@@ -1,11 +1,11 @@
 ﻿using System.Text;
 
-namespace GServer.Common;
+namespace GServer.Common.Extensions;
 
 public static class StringExtensions
 {
-  public static byte[] GetASCIIBytes(this string value)
-  {
-    return Encoding.ASCII.GetBytes(value);
-  }
+    public static byte[] GetAsciiBytes(this string value)
+    {
+        return Encoding.ASCII.GetBytes(value);
+    }
 }

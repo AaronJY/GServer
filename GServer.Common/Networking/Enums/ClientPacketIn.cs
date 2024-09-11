@@ -5,12 +5,12 @@ public enum ClientPacketIn : byte
     /// <summary>
     /// Represents an auth result from the server.
     /// </summary>
-    AUTH_RESPONSE = 1,
+    AuthResponse = 1,
 
     /// <summary>
     /// Contains a list of server listings.
     /// </summary>
-    LIST_SERVERS_RESPONSE = 2,
+    ListServersResponse = 2,
 
-    UNKNOWN = 255
+    Unknown = 255
 }

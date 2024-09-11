@@ -2,5 +2,4 @@
 
 public class GameServerOptions
 {
-    public int PacketLength { get; set; }
 }

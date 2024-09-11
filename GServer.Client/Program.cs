@@ -1,21 +1,23 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Sockets;
-using GServer.Common;
+using GServer.Common.Networking.Core;
 using GServer.Common.Networking.Enums;
 using GServer.Common.Networking.Messages.Client;
 using GServer.Common.Networking.Messages.Server;
 
-internal class Program
+namespace GServer.Client;
+
+public class Program
 {
-    private const int SERVER_PORT = 11000;
+    private const int ServerPort = 11000;
 
     private static void Main(string[] args)
     {
-        IPEndPoint serverEP = new(IPAddress.Any, SERVER_PORT);
+        IPEndPoint serverEp = new(IPAddress.Any, ServerPort);
 
         TcpClient tcpClient = new();
         tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-        tcpClient.Connect(serverEP);
+        tcpClient.Connect(serverEp);
 
         Console.WriteLine("Username...");
         string username = Console.ReadLine()!;
@@ -38,23 +40,23 @@ internal class Program
                 ClientPacketIn packetIn = (ClientPacketIn)stream.ReadByte();
                 switch (packetIn)
                 {
-                    case ClientPacketIn.AUTH_RESPONSE:
+                    case ClientPacketIn.AuthResponse:
                         AuthResponseMessage authResultMessage = new(stream);
 
                         Console.WriteLine("Success = " + authResultMessage.IsSuccessful);
-                        Console.WriteLine("SessionToken = " + authResultMessage.SessionToken ?? "null");
-                        Console.WriteLine("FailureReason = " + authResultMessage.FailureReason ?? "null");
+                        Console.WriteLine("SessionToken = " + authResultMessage.SessionToken);
+                        Console.WriteLine("FailureReason = " + authResultMessage.FailureReason);
 
                         break;
 
-                    case ClientPacketIn.LIST_SERVERS_RESPONSE:
+                    case ClientPacketIn.ListServersResponse:
                         break;
 
-                    case ClientPacketIn.UNKNOWN:
+                    case ClientPacketIn.Unknown:
                         break;
 
                     default:
-                        Console.WriteLine($"Received unsupported packet.");
+                        Console.WriteLine("Received unsupported packet.");
                         break;
                 }
             }
@@ -67,7 +69,5 @@ internal class Program
         {
             tcpClient.Close();
         }
-
-
     }
 }

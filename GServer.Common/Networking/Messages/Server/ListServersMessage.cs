@@ -4,7 +4,7 @@ namespace GServer.Common.Networking.Messages.Server;
 
 public class ListServersMessage : BaseMessage, IMessage<ListServersMessage>
 {
-    public ListServersMessage() : base((byte)ServerPacketIn.LIST_SERVERS)
+    public ListServersMessage() : base((byte)ServerPacketIn.ListServers)
     {
     }
 

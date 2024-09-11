@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace GServer.Common;
+namespace GServer.Common.Networking.Core;
 
 public class MessageMemoryStream : MemoryStream
 {
@@ -31,7 +31,7 @@ public class MessageMemoryStream : MemoryStream
         return BitConverter.ToInt16(buffer);
     }
 
-    public string ReadUTF8String(int length)
+    public string ReadUtf8String(int length)
     {
         byte[] bytes = new byte[length];
         _ = Read(bytes, 0, length);
@@ -49,7 +49,7 @@ public class MessageMemoryStream : MemoryStream
         Write(bytes, 0, 2);
     }
 
-    public void WriteUTF8String(string value)
+    public void WriteUtf8String(string value)
     {
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         Write(bytes, 0, bytes.Length);

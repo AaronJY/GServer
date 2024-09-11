@@ -1,4 +1,5 @@
-﻿using System.Text;
+using System.Text;
+using GServer.Common.Networking.Core;
 using GServer.Common.Networking.Enums;
 
 namespace GServer.Common.Networking.Messages.Client;
@@ -11,33 +12,33 @@ public enum AuthResponseFailure : byte
 
 public class AuthResponseMessage : BaseMessage, IMessage<AuthResponseMessage>
 {
-    public bool IsSuccessful { get; private set; }
+    public bool IsSuccessful { get; }
 
     /// <summary>
     /// Used to authenticate the user. Only set if IsSuccessful is true.
     /// </summary>
-    public string? SessionToken { get; private set; }
+    public string? SessionToken { get; }
 
     /// <summary>
     /// Reason for auth failure. Only set is IsSuccessful is false.
     /// </summary>
-    public AuthResponseFailure? FailureReason { get; private set; }
+    public AuthResponseFailure? FailureReason { get; }
 
-    public AuthResponseMessage(bool isSuccessful, string? sessionToken = null, AuthResponseFailure? failureReason = null) : base((byte)ClientPacketIn.AUTH_RESPONSE)
+    public AuthResponseMessage(bool isSuccessful, string? sessionToken = null, AuthResponseFailure? failureReason = null) : base((byte)ClientPacketIn.AuthResponse)
     {
         IsSuccessful = isSuccessful;
         SessionToken = sessionToken;
         FailureReason = failureReason;
     }
 
-    public AuthResponseMessage(MessageMemoryStream stream) : base((byte)ClientPacketIn.AUTH_RESPONSE)
+    public AuthResponseMessage(MessageMemoryStream stream) : base((byte)ClientPacketIn.AuthResponse)
     {
         IsSuccessful = stream.ReadBoolean();
 
         if (IsSuccessful)
         {
             ushort sessionTokenLen = stream.ReadUInt16();
-            SessionToken = stream.ReadUTF8String(sessionTokenLen);
+            SessionToken = stream.ReadUtf8String(sessionTokenLen);
         }
         else
         {
@@ -56,7 +57,7 @@ public class AuthResponseMessage : BaseMessage, IMessage<AuthResponseMessage>
         {
             short sessionTokenByteLen = (short)Encoding.UTF8.GetByteCount(SessionToken!);
             stream.WriteUInt16(sessionTokenByteLen);
-            stream.WriteUTF8String(SessionToken!);
+            stream.WriteUtf8String(SessionToken!);
         }
         else
         {

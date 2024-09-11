@@ -1,5 +1,5 @@
 using System.Net.Sockets;
-using GServer.Common;
+using GServer.Common.Networking.Core;
 using GServer.Common.Networking.Enums;
 using GServer.Common.Networking.Messages;
 using GServer.Common.Networking.Messages.Client;
@@ -7,12 +7,8 @@ using GServer.Common.Networking.Messages.Server;
 
 namespace GServer.Server;
 
-public class TCPMessageHandler : IMessageHandler
+public class TcpMessageHandler : IMessageHandler
 {
-    public TCPMessageHandler()
-    {
-    }
-
     public async Task HandleMessageAsync(Socket clientSocket, MessageMemoryStream messageStream)
     {
         ServerPacketIn serverPacketIn = (ServerPacketIn)messageStream.ReadByte();
@@ -21,11 +17,11 @@ public class TCPMessageHandler : IMessageHandler
 
         switch (serverPacketIn)
         {
-            case ServerPacketIn.AUTH:
+            case ServerPacketIn.Auth:
                 AuthMessage msg = new(messageStream);
 
-                AuthResponseMessage resp = msg.Username == "aaronyarbz" && msg.Password == "password123"
-                    ? new(true, Guid.NewGuid().ToString(), null)
+                AuthResponseMessage resp = msg is { Username: "aaronyarbz", Password: "password123" }
+                    ? new(true, Guid.NewGuid().ToString(), failureReason: null)
                     : new(false, null, AuthResponseFailure.IncorrectLoginOrPassword);
 
                 byte[] buffer = resp.Serialize();
@@ -33,7 +29,7 @@ public class TCPMessageHandler : IMessageHandler
 
                 break;
 
-            case ServerPacketIn.LIST_SERVERS:
+            case ServerPacketIn.ListServers:
                 throw new NotImplementedException();
 
             default:
