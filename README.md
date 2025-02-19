@@ -26,7 +26,7 @@ All possible client and server message IDs can be found in `Networking/Enums/Cli
 
 ### Messages
 
-*AuthMessage*
+**AuthMessage**
 
 ```asn.1
 AuthMessage ::= SEQUENCE {
@@ -38,7 +38,7 @@ AuthMessage ::= SEQUENCE {
 }
 ```
 
-*ListServerMessage* (TODO)
+**ListServerMessage** (TODO)
 
 ```asn.1
 ServerListingBlock ::= SEQUENCE {
