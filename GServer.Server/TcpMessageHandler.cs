@@ -4,10 +4,18 @@ using GServer.Common.Networking.Enums;
 using GServer.Common.Networking.Messages;
 using GServer.Common.Networking.Messages.Client;
 using GServer.Common.Networking.Messages.Server;
+using GServer.Server.Business.Services;
 
 namespace GServer.Server;
 
-public class TcpMessageHandler : IMessageHandler
+public interface ITcpMessageHandler
+{
+    Task HandleMessageAsync(Socket clientSocket, MessageMemoryStream messageStream);
+}
+
+public class TcpMessageHandler(
+    IAuthService authService
+) : IMessageHandler, ITcpMessageHandler
 {
     public async Task HandleMessageAsync(Socket clientSocket, MessageMemoryStream messageStream)
     {
@@ -20,7 +28,8 @@ public class TcpMessageHandler : IMessageHandler
             case ServerPacketIn.Auth:
                 AuthMessage msg = new(messageStream);
 
-                AuthResponseMessage resp = msg is { Username: "aaronyarbz", Password: "password123" }
+                bool isPasswordCorrect = authService.IsPasswordCorrect(msg.Username, msg.Password);
+                AuthResponseMessage resp = isPasswordCorrect
                     ? new(true, Guid.NewGuid().ToString(), failureReason: null)
                     : new(false, null, AuthResponseFailure.IncorrectLoginOrPassword);
 
