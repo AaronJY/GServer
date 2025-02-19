@@ -4,6 +4,13 @@
 
 A rudimentary TCP/UDP game server mimicking the architecture of Graal Online's GServer from the 90s-00s.
 
+## Projects
+
+The repo is made up of the following projects:
+* GServer.Server - the server to be connected to
+* GServer.Client - the client that connects to the server
+* GServer.Common - a class library used by both of the above projects. Contains shared code.
+
 ## Networking
 
 Packets are sent between the client and server to enable communication. Specific packets can carry data specific purposes, referred to as messages. A message has an ID that defines its type/purpose, as well as data related to its purpose.
@@ -22,9 +29,11 @@ For example: when authenticating, the following message is used:
 
 (see *Messages* section for this message and others' ASN.1 definitions)
 
-All possible client and server message IDs can be found in `Networking/Enums/ClientPacketIn.cs` or `Networking/Enums/ServerPacketIn.cs`, according to whether the message is being received (_in_) or transmitted (_out_)
+All possible client and server message IDs can be found in [GServer.Common/Networking/Enums/ClientPacketIn.cs](GServer.Common/Networking/Enums/ClientPacketIn.cs) (for packets processed by the client) or [GServer.Common/Networking/Enums/ServerPacketIn.cs](GServer.Common/Networking/Enums/ServerPacketIn.cs) (for messages processed by the server)
 
 ### Messages
+
+The below lists [ASN.1](https://en.wikipedia.org/wiki/ASN.1) definitions for each message exactly as they are intended to be send and received by the game client and server. All C# message definitons can be found in [GServer.Common/Networking/Messages](GServer.Common/Networking/Messages)
 
 **AuthMessage**
 
@@ -52,13 +61,7 @@ ServerListingBlock ::= SEQUENCE {
 
 ServerListing ::= SEQUENCE {
     messageId   INTEGER (0..255),
-    ...
+    TODO
 }
 ```
 
-## Projects
-
-The repo is made up of the following projects:
-* GServer.Server - the server to be connected to
-* GServer.Client - the client that connects to the server
-* GServer.Common - a class library used by both of the above projects. Contains shared code.
