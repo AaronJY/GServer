@@ -43,7 +43,13 @@ public class MessageMemoryStream : MemoryStream
         WriteByte((byte)(value ? 1 : 0));
     }
 
-    public void WriteUInt16(short value)
+    public void WriteInt16(short value)
+    {
+        byte[] bytes = BitConverter.GetBytes(value);
+        Write(bytes, 0, 2);
+    }
+
+    public void WriteUInt16(ushort value)
     {
         byte[] bytes = BitConverter.GetBytes(value);
         Write(bytes, 0, 2);
@@ -53,5 +59,30 @@ public class MessageMemoryStream : MemoryStream
     {
         byte[] bytes = Encoding.UTF8.GetBytes(value);
         Write(bytes, 0, bytes.Length);
+    }
+
+    public void WriteUtf8StringOfSize(uint byteLength, string value)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(value);
+        Write(bytes, 0, (int)byteLength);
+    }
+
+    public void WriteInt64(long value)
+    {
+        byte[] bytes = BitConverter.GetBytes(value);
+        Write(bytes, 0, 8);
+    }
+
+    public void WriteBytes(byte[] data)
+    {
+        long offset = 0;
+        int chunkSize = Int32.MaxValue; // Maximum size for one write operation
+
+        while (offset < data.Length)
+        {
+            int remaining = (int)Math.Min(chunkSize, data.Length - offset);
+            Write(data, (int)offset, remaining);
+            offset += remaining;
+        }
     }
 }
