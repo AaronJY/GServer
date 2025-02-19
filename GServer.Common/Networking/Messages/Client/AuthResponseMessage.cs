@@ -56,7 +56,7 @@ public class AuthResponseMessage : BaseMessage, IMessage<AuthResponseMessage>
         if (IsSuccessful)
         {
             short sessionTokenByteLen = (short)Encoding.UTF8.GetByteCount(SessionToken!);
-            stream.WriteUInt16(sessionTokenByteLen);
+            stream.WriteInt16(sessionTokenByteLen);
             stream.WriteUtf8String(SessionToken!);
         }
         else
