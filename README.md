@@ -22,6 +22,38 @@ For example: when authenticating, the following format is used:
 
 All possible client and server message IDs can be found in `Networking/Enums/ClientPacketIn.cs` or `Networking/Enums/ServerPacketIn.cs` respectively.
 
+### Packets
+
+*AuthMessage*
+
+```asn.1
+AuthMessage ::= SEQUENCE {
+    messageId   INTEGER (0..255),
+    usernameLen INTEGER (0..255),
+    username    OCTET STRING (SIZE (0..usernameLen)),
+    passwordLen INTEGER (0..255),
+    password    OCTET STRING (SIZE (0..passwordLen))
+}
+```
+
+*ListServerMessage* (TODO)
+
+```asn.1
+ServerListingBlock ::= SEQUENCE {
+    name        OCTET STRING (SIZE (50)),
+    description OCTET STRING (SIZE (1000)),
+    playercount INTEGER (0..65535),
+    ip          OCTET STRING (SIZE (15)),
+    port        INTEGER (0..65535),
+    serverTier  INTEGER (0..255)
+}
+
+ServerListing ::= SEQUENCE {
+    messageId   INTEGER (0..255),
+    ...
+}
+```
+
 ## Projects
 
 The repo is made up of the following projects:
