@@ -1,16 +1,16 @@
 # GServer
 
-**Note:** still writing README...
+**Note:** This README is a work in progress 🛠️
 
-A rudimentary UDP game server mimicking the architecture of Graal Online's GServer from the 90s-00s.
+A rudimentary TCP/UDP game server mimicking the architecture of Graal Online's GServer from the 90s-00s.
 
 ## Networking
 
-UDP packets are sent between the client and server to enable communication. UDP requests can be thought of like 'messages', where each message has an ID that denotes the type of message (e.g. AUTH, LIST_SERVERS), followed by the message's data.
+Packets are sent between the client and server to enable communication. Specific packets can carry data specific purposes, referred to as messages. A message has an ID that defines its type/purpose, as well as data related to its purpose.
 
 The first byte of a message is used to denote its type, but no standard format is shared between messages for the data belonging to each message.
 
-For example: when authenticating, the following format is used:
+For example: when authenticating, the following message is used:
 
 - Message ID (1 byte)
 - Username length (1 byte)
@@ -20,9 +20,11 @@ For example: when authenticating, the following format is used:
 
 `{message_id}{username_len}{username}{password_len}{password}`
 
-All possible client and server message IDs can be found in `Networking/Enums/ClientPacketIn.cs` or `Networking/Enums/ServerPacketIn.cs` respectively.
+(see *Messages* section for this message and others' ASN.1 definitions)
 
-### Packets
+All possible client and server message IDs can be found in `Networking/Enums/ClientPacketIn.cs` or `Networking/Enums/ServerPacketIn.cs`, according to whether the message is being received (_in_) or transmitted (_out_)
+
+### Messages
 
 *AuthMessage*
 
