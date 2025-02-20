@@ -31,6 +31,13 @@ public class MessageMemoryStream : MemoryStream
         return BitConverter.ToInt16(buffer);
     }
 
+    public long ReadInt64()
+    {
+        byte[] buffer = new byte[8];
+        _ = Read(buffer, 0, 8);
+        return BitConverter.ToInt64(buffer);
+    }
+
     public string ReadUtf8String(int length)
     {
         byte[] bytes = new byte[length];
