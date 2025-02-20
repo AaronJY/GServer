@@ -47,7 +47,17 @@ AuthMessage ::= SEQUENCE {
 }
 ```
 
-**ListServerMessage** (TODO)
+**AuthResponseMessage**
+
+```asn.1
+AuthResponseMessage ::= SEQUENCE {
+    messageId       INTEGER (0..255),
+    isSuccessful    INTEGER (0..255),
+    TODO implement CHOICE for conditional fields
+}
+```
+
+**ListServerResponseMessage** (TODO)
 
 ```asn.1
 ServerListingBlock ::= SEQUENCE {
@@ -60,8 +70,8 @@ ServerListingBlock ::= SEQUENCE {
 }
 
 ServerListing ::= SEQUENCE {
-    messageId   INTEGER (0..255),
-    TODO
+    messageId           INTEGER (0..255),
+    serverListingBlocks SEQUENCE OF ServerListingBlock
 }
 ```
 
