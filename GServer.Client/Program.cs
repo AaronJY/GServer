@@ -56,11 +56,11 @@ public static class Program
 
                             // Request server list as soon as login has succeeded
 
-                            if (authResultMessage.IsSuccessful)
-                            {
-                                Console.WriteLine("Getting server list...");
-                                _ = tcpClient.Client.Send(new[] { (byte)ServerPacketIn.ListServers });
-                            }
+                            // if (authResultMessage.IsSuccessful)
+                            // {
+                            //     Console.WriteLine("Getting server list...");
+                            //     _ = tcpClient.Client.Send(new[] { (byte)ServerPacketIn.ListServers });
+                            // }
 
                             break;
 

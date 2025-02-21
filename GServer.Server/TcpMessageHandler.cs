@@ -12,14 +12,14 @@ namespace GServer.Server;
 
 public interface ITcpMessageHandler
 {
-    Task HandleMessageAsync(Socket clientSocket, MessageMemoryStream messageStream);
+    Task HandleMessageAsync(Socket clientSocket, MessageMemoryStream messageStream, ClientState state);
 }
 
 public class TcpMessageHandler(
     IAuthService authService
-) : IMessageHandler, ITcpMessageHandler
+) : ITcpMessageHandler
 {
-    public async Task HandleMessageAsync(Socket clientSocket, MessageMemoryStream messageStream)
+    public async Task HandleMessageAsync(Socket clientSocket, MessageMemoryStream messageStream, ClientState state)
     {
         ServerPacketIn serverPacketIn = (ServerPacketIn)messageStream.ReadByte();
 
@@ -36,6 +36,10 @@ public class TcpMessageHandler(
                     ? new AuthResponseMessage(true, Guid.NewGuid().ToString(), failureReason: null)
                     : new AuthResponseMessage(false, null, AuthResponseFailure.IncorrectLoginOrPassword);
                 await SendMessageAsync(resp, clientSocket);
+                
+                // TODO: Placeholder for now -- set up actual username and player ID
+                state.Username = msg.Username;
+                state.PlayerId = Guid.NewGuid();
 
                 break;
             }

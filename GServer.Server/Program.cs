@@ -17,13 +17,10 @@ internal sealed class Program
         // Register services
         _ = builder.Services.AddScoped<IAuthService, AuthService>();
         _ = builder.Services.AddScoped<ITcpMessageHandler, TcpMessageHandler>();
-        _ = builder.Services.AddTransient<ITcpGameServer>((services) =>
-        {
-            return new TcpGameServer(
-                new IPEndPoint(IPAddress.Any, ListenPort),
-                services.GetRequiredService<ITcpMessageHandler>()
-            );
-        });
+        _ = builder.Services.AddTransient<ITcpGameServer>((services) => new TcpGameServer(
+            new IPEndPoint(IPAddress.Any, ListenPort),
+            services.GetRequiredService<ITcpMessageHandler>()
+        ));
 
         // Start service
         using IHost host = builder.Build();
@@ -33,12 +30,12 @@ internal sealed class Program
 
     private static void ApplicationLifetime(IServiceProvider hostProvider)
     {
-        using IServiceScope serviceScope = hostProvider.CreateScope();
-
         Thread serverWorker = new(() =>
         {
+            using IServiceScope serviceScope = hostProvider.CreateScope();
+
             ITcpGameServer server = serviceScope.ServiceProvider.GetRequiredService<ITcpGameServer>();
-            server.Start();
+            server.StartAsync();
 
             while (true)
             {
