@@ -27,11 +27,9 @@ internal static class Program
     {
         try
         {
-            IPEndPoint serverEp = new(IPAddress.Any, GameServerPort);
-
-            TcpClient tcpClient = new();
-            tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            tcpClient.Connect(serverEp);
+            string gameServerIp = IPAddress.Any.ToString();
+            Static.TcpGameClient.ConnectAsync(gameServerIp, GameServerPort).Wait();
+            Console.WriteLine($"Successfully connected to game server @ {gameServerIp}:{GameServerPort}");
         }
         catch (Exception e)
         {

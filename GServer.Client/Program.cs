@@ -20,7 +20,7 @@ public static class Program
 
         TcpClient tcpClient = new();
         tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-        tcpClient.Connect(serverEp);
+        tcpClient.ConnectAsync(serverEp);
         
         try
         {
