@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GServer.Server", "GServer.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GServer.Client", "GServer.Client\GServer.Client.csproj", "{C105363D-E719-4296-94A2-01170E603889}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GServer.RC", "GServer.RC\GServer.RC.csproj", "{328FDAD6-F0DD-4094-882D-FAF9D563AD51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C105363D-E719-4296-94A2-01170E603889}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C105363D-E719-4296-94A2-01170E603889}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C105363D-E719-4296-94A2-01170E603889}.Release|Any CPU.Build.0 = Release|Any CPU
+		{328FDAD6-F0DD-4094-882D-FAF9D563AD51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{328FDAD6-F0DD-4094-882D-FAF9D563AD51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{328FDAD6-F0DD-4094-882D-FAF9D563AD51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{328FDAD6-F0DD-4094-882D-FAF9D563AD51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
